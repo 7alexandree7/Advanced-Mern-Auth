@@ -1,4 +1,4 @@
-*** Resumo Inicial ***
+`Resumo Inicial`
 
 1 - Instalar as dependencias
 
@@ -23,3 +23,22 @@
   - Criar um arquivo para cada model seguindo a nomenclatura ex: user.model.js
   - Definir campos, tipos, validações e valores padrões do schema
   - Exportar o model para ser utilizado nas controllers e services
+  
+-------------------------------------------------------------------------------------------------
+
+
+`Preparativos importantes para a criação de um usuario`
+
+1 - Receber as informações que vem do body da requisição
+2 - Fazer a validação dos dados
+3 - Conferir se esse usuario que esta tentando se cadastrar ja possui um email ativo = (usuario existente)
+4 - Criptografar a senha do usuario para não salvar ela de forma crua no banco de dados da aplicação / sempre quando for criar o user passar a senha com o hash
+5 - Com todas as informações em mãos criar um novo usuario no nosso banco de dados
+6 - utilizar o `await user.save()` para que todas nossas alterações sejam salvas no nosso banco MondoDB
+
+-------------------------------------------------------------------------------------------------
+
+
+`JWT & COOKIES`
+
+1 - Criar no .env um JWT_SECRET
