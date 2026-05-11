@@ -5,6 +5,7 @@ export const ENV_VARIABLES = {
     PORT: process.env.PORT || 3000,
     JWT_SECRET: process.env.JWT_SECRET,
     NODE_ENV: process.env.NODE_ENV || 'development',
+    TOKEN_EMAILTRAP: process.env.TOKEN_EMAILTRAP,
 };
 
 if (!ENV_VARIABLES.MONGODB_URL) {
@@ -21,4 +22,8 @@ if (!ENV_VARIABLES.PORT) {
 
 if (!ENV_VARIABLES.NODE_ENV) {
     throw new Error('NODE_ENV is not defined');
+}
+
+if (!ENV_VARIABLES.TOKEN_EMAILTRAP) {
+    throw new Error('TOKEN_EMAILTRAP is not defined');
 }

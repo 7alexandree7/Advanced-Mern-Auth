@@ -1,6 +1,8 @@
 import { User } from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
-import { generateVerificationCode } from '../utils/generateverificationToken.js';
+import { generateVerificationToken } from '../utils/generateverificationToken.js';
+import { generatetokenAndSetCookie } from '../utils/generatetokenAndSetCookie.js';
+import { userNotPassword } from '../utils/userNotPassword.js';
 
 
 export const signup = async (req, res) => {
@@ -28,7 +30,13 @@ export const signup = async (req, res) => {
 
     await user.save();
     generatetokenAndSetCookie(res, user._id);
-    res.status(201).json({ success: true, message: "User created successfully" });
+
+
+    res.status(201).json({
+        success: true,
+        message: "User created successfully",
+        data: userNotPassword(user)
+    });
 
 
    } catch (error) {
