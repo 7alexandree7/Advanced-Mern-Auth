@@ -8,12 +8,12 @@ const client = new MailtrapClient({
 });
 
 const sender = {
-    email: "hello@demomailtrap.co",
-    name: "Alexandre",
+    email: ENV_VARIABLES.SENDER_EMAIL,
+    name: ENV_VARIABLES.SENDER_NAME,
 };
 const recipients = [
     {
-        email: "alexandre020602@gmail.com",
+        email: ENV_VARIABLES.MY_EMAIL,
     }
 ];
 
