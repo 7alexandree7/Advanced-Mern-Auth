@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { generateVerificationToken } from '../utils/generateverificationToken.js';
 import { generatetokenAndSetCookie } from '../utils/generatetokenAndSetCookie.js';
 import { userNotPassword } from '../utils/userNotPassword.js';
+import { sendVerificationEmail } from '../mail/email.js';
 
 
 export const signup = async (req, res) => {
@@ -30,6 +31,7 @@ export const signup = async (req, res) => {
 
     await user.save();
     generatetokenAndSetCookie(res, user._id);
+    await sendVerificationEmail(user.email, verificationToken);
 
 
     res.status(201).json({
