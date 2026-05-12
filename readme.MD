@@ -49,4 +49,49 @@
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 ````
 
+-------------------------------------------------------------------------------------------------
+
+
 # `Envio de Emails`
+
+- 1 Lib MailTrap
+  - Mailtrap: Plataforma de Entrega de Emails.
+  - Criar uma pasta mail
+    - email.js - `Responsável por enviar os emails utilizando o Mailtrap.`
+    - emailTemplate.js - `Armazena os templates HTML dos emails da aplicação (verificação, reset de senha, etc).`
+    - mailtrap.config.js - `Configura a conexão com o Mailtrap e define o remetente padrão dos emails.`
+- 2 Importa o código base gerado pela documentação do site
+- No arqui email.js
+
+-------------------------------------------------------------------------------------------------
+
+# `Verify Email`
+
+- 1 - Criar uma rota post verify-email
+- 2 - Criar um controller para a rota `verifyEmail`
+- 3 - Recebe o code de 6 digitos digitados pelo usuario no front
+- 4 - Procura um usuário com esse código no banco.
+- 5 - Verifica se o código ainda não expirou.
+- 6 - Marca o email como verificado.
+- 7 - Remove o código de verificação do banco
+- 8 - Envia email de boas-vindas. Pela função `await sendWelcomeEmail(user.email, user.name)` passando o email e o name para o template
+```
+export const sendWelcomeEmail = async (email, name) => {
+    const recipient = [ { email } ];
+
+    try {
+        const response = await mailtrapClient.send({
+            from: sender,
+            to: recipient,
+            template_uuid: "abeaf537-58da-464c-9655-bb6f68e7c63c",
+            template_variables: {
+                name: name,
+                "company_info_name": "Auth Company",
+            }
+
+        })
+    } catch (error) {
+        
+    }
+}
+```
