@@ -9,7 +9,7 @@ export const ENV_VARIABLES = {
     MY_EMAIL: process.env.MY_EMAIL,
     SENDER_NAME: process.env.SENDER_NAME || 'Alexandre',
     SENDER_EMAIL: process.env.SENDER_EMAIL || 'hello@demomailtrap.co',
-
+    CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173'
 };
 
 if (!ENV_VARIABLES.MONGODB_URL) {
@@ -38,4 +38,8 @@ if (!ENV_VARIABLES.MY_EMAIL) {
 
 if (!ENV_VARIABLES.SENDER_EMAIL || !ENV_VARIABLES.SENDER_NAME) {
     throw new Error('SENDER_EMAIL and SENDER_NAME must be defined');
+}
+
+if (!ENV_VARIABLES.CLIENT_URL) {
+    throw new Error('CLIENT_URL is not defined');
 }

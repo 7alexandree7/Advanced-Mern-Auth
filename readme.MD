@@ -95,3 +95,33 @@ export const sendWelcomeEmail = async (email, name) => {
     }
 }
 ```
+
+
+# `Forgot Password` 
+
+- 1 - usuário digita o email
+- 2 - backend procura o usuário
+- 3 - backend gera um token aleatório
+- 4 - salva esse token no banco
+- 5 - salva uma data de expiração
+- 6 - envia email com link contendo o token
+- 7 - depois o usuário usa esse token pra criar nova senha `await sendResetPasswordEmail(user.email, ${ENV_VARIABLES.CLIENT_URL}/reset-password/${resetToken});`
+```
+export const sendResetPasswordEmail = async (email, resetURL) => {
+
+    const recipient = [ { email }]
+
+    try {
+        const response = await mailtrapClient.send({
+            from: sender,
+            to: recipient,
+            subject: "Reset your password",
+            html: PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}", resetURL),
+            category: "Password Reset",
+        })
+    } catch (error) {
+        throw new Error("Error sending reset password email:", error);
+        console.error("Error sending reset password email:", error);
+    }
+}
+```
