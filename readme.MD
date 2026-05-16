@@ -96,6 +96,7 @@ export const sendWelcomeEmail = async (email, name) => {
 }
 ```
 
+-------------------------------------------------------------------------------------------------
 
 # `Forgot Password` 
 
@@ -125,3 +126,12 @@ export const sendResetPasswordEmail = async (email, resetURL) => {
     }
 }
 ```
+
+- 8 - O Uuário é redireciano para a web na tela de redefinição de senha após clicar no link do email de esqueceu a senha
+- 9 - A URL sera dinamica domain/reset-password/token `Token gerado pela lib crypto const resetToken = crypto.randomBytes(20).toString('hex');`
+
+-------------------------------------------------------------------------------------------------
+
+# `Reset Password`
+
+- 1 Criar rota dinamica com o token `router.post('/reset-password/:token', resetPassword)`
