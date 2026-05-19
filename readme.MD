@@ -54,12 +54,12 @@
 
 # `Envio de Emails`
 
-- 1 Lib MailTrap
-  - Mailtrap: Plataforma de Entrega de Emails.
+- 1 Lib Resend
+  - Resend emails: Plataforma de Entrega de Emails.
   - Criar uma pasta mail
-    - email.js - `Responsável por enviar os emails utilizando o Mailtrap.`
+    - email.js - `Responsável por enviar os emails utilizando o resend.`
     - emailTemplate.js - `Armazena os templates HTML dos emails da aplicação (verificação, reset de senha, etc).`
-    - mailtrap.config.js - `Configura a conexão com o Mailtrap e define o remetente padrão dos emails.`
+    - resend.config.js - `Configura a conexão com o resend e define o remetente padrão dos emails.`
 - 2 Importa o código base gerado pela documentação do site
 - No arqui email.js
 
@@ -77,21 +77,20 @@
 - 8 - Envia email de boas-vindas. Pela função `await sendWelcomeEmail(user.email, user.name)` passando o email e o name para o template
 ```
 export const sendWelcomeEmail = async (email, name) => {
-    const recipient = [ { email } ];
 
     try {
-        const response = await mailtrapClient.send({
-            from: sender,
-            to: recipient,
-            template_uuid: "abeaf537-58da-464c-9655-bb6f68e7c63c",
-            template_variables: {
-                name: name,
-                "company_info_name": "Auth Company",
-            }
-
-        })
+        const response = await resend.emails.send({
+            from: ENV_VARIABLES.RESEND_DOMAIN,
+            to: email,
+            subject: "Welcome to our app!",
+            html: `
+                <h1>Welcome ${name}!</h1>
+                <p>Thanks for joining Auth Company.</p>
+            `,
+        });
     } catch (error) {
-        
+        console.error("Error sending welcome email:", error);
+        throw error;
     }
 }
 ```
@@ -110,19 +109,16 @@ export const sendWelcomeEmail = async (email, name) => {
 ```
 export const sendResetPasswordEmail = async (email, resetURL) => {
 
-    const recipient = [ { email }]
-
     try {
-        const response = await mailtrapClient.send({
-            from: sender,
-            to: recipient,
+        const response = await resend.emails.send({
+            from: ENV_VARIABLES.RESEND_DOMAIN,
+            to: email,
             subject: "Reset your password",
             html: PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}", resetURL),
-            category: "Password Reset",
         })
     } catch (error) {
-        throw new Error("Error sending reset password email:", error);
         console.error("Error sending reset password email:", error);
+        throw error;
     }
 }
 ```
@@ -134,4 +130,32 @@ export const sendResetPasswordEmail = async (email, resetURL) => {
 
 # `Reset Password`
 
-- 1 Criar rota dinamica com o token `router.post('/reset-password/:token', resetPassword)`
+- 1 - Criar rota dinamica com o token `router.post('/reset-password/:token', resetPassword)`
+- 2 - Recebe o token do params da url
+- 3 - Recebe a nova senha do body
+- 4 - Encontra o usuario vinculado ao token que quer redefinir a senha / faz a verificação
+- 5 - Faz o hash com o bcrypt na nova senha escolhida pelo usuario
+- 6 - Atribui a nova senha ao banco `user.password = hashedPassword;` 
+- 7 - faz o reset `user.resetPasswordToken = undefined;` - `user.resetPasswordExpiresAt = undefined;`
+- 8 - Salva as alterações no banco `await user.save()`
+- 9 - Chama a função do resend para enviar um email ao usuario informando sobre a redefinição de senha ` await sendResetSuccessEmail(user.email);`
+- 10 - Devolve a resposta da requisição com try catch `res.status(200).json({ success: true, message: "Password reset successfully" });` ou erro
+
+-------------------------------------------------------------------------------------------------
+
+# `Verificar Se este usuario esta autenticado`
+
+- 1 - Criar uma rota do tipo get ("check-auth)
+- 2 - Passar um middleware de verifyToken
+    - Receber o token da req
+    - dentro do try verificar se o token existe
+    - Criar uma variavel decoded para utlizar o `jwt.verify(token, JWT_SECRET)`
+    - Veriicar se não veio o decoded
+    - Adiciona `req.userId = decoded.userId;` a cada requisição que esse middleware for chamado / o JWT já identifica o usuário
+- 3 - Passar o controller de checkAuth
+    - verificar se o usuário autenticado ainda existe
+    - Dentro do bloco try
+    - busca usuário no MongoDB / pega o ID do token
+    - Verificação
+    - Resposta
+    - Esse endpoint geralmente é usado para: persistência de autenticação / manter login

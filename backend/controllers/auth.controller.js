@@ -67,7 +67,7 @@ export const login = async (req, res) => {
         generatetokenAndSetCookie(res, user._id);
         user.lastLogin = new Date();
         await user.save();
-        
+
         res.status(200).json({ success: true, message: "Logged in successfully", data: userNotPassword(user) });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
@@ -108,11 +108,11 @@ export const verifyEmail = async (req, res) => {
 
 
 export const forgotPassword = async (req, res) => {
-    const { email} = req.body;
+    const { email } = req.body;
 
     try {
         const user = await User.findOne({ email });
-        if(!user) {
+        if (!user) {
             return res.status(400).json({ success: false, message: "User with this email does not exist" });
         }
 
@@ -122,7 +122,7 @@ export const forgotPassword = async (req, res) => {
 
         user.resetPasswordToken = resetToken;
         user.resetPasswordExpiresAt = resetTokenExpiresAt;
-        
+
         await user.save();
 
         // Send reset password email
@@ -140,7 +140,7 @@ export const resetPassword = async (req, res) => {
         const { token } = req.params;
         const { newPassword } = req.body;
 
-        const user = await User.findOne( { resetPasswordToken: token, resetPasswordExpiresAt: { $gt: Date.now() } } );
+        const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpiresAt: { $gt: Date.now() } });
         if (!user) {
             return res.status(400).json({ success: false, message: "Invalid or expired reset token" });
         }
@@ -161,3 +161,16 @@ export const resetPassword = async (req, res) => {
     }
 }
 
+
+
+export const checkAuth = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        res.status(200).json({ success: true, message: "User found", data: userNotPassword(user) });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+}
