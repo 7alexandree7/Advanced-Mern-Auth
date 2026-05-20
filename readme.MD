@@ -159,3 +159,15 @@ export const sendResetPasswordEmail = async (email, resetURL) => {
     - Verificação
     - Resposta
     - Esse endpoint geralmente é usado para: persistência de autenticação / manter login
+
+
+
+-------------------------------------------------------------------------------------------------
+
+
+# `FRONT-END`
+
+# `LIBS`
+
+- 1 - TailwindCSS
+- 2 - React router dom
