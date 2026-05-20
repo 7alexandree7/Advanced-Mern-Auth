@@ -171,3 +171,21 @@ export const sendResetPasswordEmail = async (email, resetURL) => {
 
 - 1 - TailwindCSS
 - 2 - React router dom
+- 3 - Framer motion
+
+
+-------------------------------------------------------------------------------------------------
+
+
+# `Primeiros Passos`
+
+- 1 - Centralizar tudo ao centro + estilos
+- 2 - Criar o Componente `FloatingShape` que representara os circulos ao longo da nossa screen
+    - Passar as Props para poder reutilizar o messmo componente em tamanhos e posições diferentes
+```
+    <FloatingShape color={"bg-green-500"} size={"w-64 h-64"} top="-5%" left="10%" delay={0} />
+    <FloatingShape color={"bg-green-500"} size={"w-48 h-48"} top="70%" left="80%" delay={5} />
+    <FloatingShape color={"bg-green-500"} size={"w-32 h-32"} top="40%" left="-10%" delay={2} />
+```
+
+- 3 - Configurar as rotas com react router dom
